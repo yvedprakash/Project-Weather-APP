@@ -6,8 +6,8 @@ document.getElementById('search-button').addEventListener('click', function() {
 });
 
 function fetchWeather(city) {
-    const apiKey = 'your_api_key_here'; // Replace with your actual API key
-    const url = https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric;
+    const apiKey = "8b1880b708f34c02833144426251307"; // Replace with your actual API key
+    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`; //api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric;
 
     fetch(url)
         .then(response => response.json())
