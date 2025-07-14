@@ -1,36 +1,24 @@
-document.getElementById('search-button').addEventListener('click', function() {
-    const city = document.getElementById('city-input').value;
-    if (city) {
-        fetchWeather(city);
-    }
-});
+async function getWeather() {
+  const city = document.getElementById("city-input").value;
+  const apiKey = "8b1880b708f34c02833144426251307";
+  const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
 
-function fetchWeather(city) {
-    const apiKey = "8b1880b708f34c02833144426251307"; // Replace with your actual API key
-    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`; //api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("City not found");
+    const data = await response.json();
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.cod === 200) {
-                displayWeather(data);
-            } else {
-                alert('City not found');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching the weather data:', error);
-        });
-}
+    const weatherInfo = `
+      <h2>${data.location.name}, ${data.location.country}</h2>
+      <p><strong>Temperature:</strong> ${data.current.temp_c} °C</p>
+      <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+      <img src="${data.current.condition.icon}" alt="Weather Icon" />
+      <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+      <p><strong>Air Quality Index:</strong> ${data.current.air_quality.pm2_5.toFixed(2)}</p>
+    `;
 
-function displayWeather(data) {
-    const cityName = document.getElementById('city-name');
-    const temperature = document.getElementById('temperature');
-    const weatherDescription = document.getElementById('weather-description');
-    const humidity = document.getElementById('humidity');
-
-    cityName.textContent = data.name;
-    temperature.textContent = Temperature : ${data.main.temp} °C;
-    weatherDescription.textContent = Weather : ${data.weather[0].description};
-    humidity.textContent = Humidity : ${data.main.humidity}%;
+    document.getElementById("weather-result").innerHTML = weatherInfo;
+  } catch (error) {
+    document.getElementById("weather-result").innerHTML = `<p style="color:red;">${error.message}</p>`;
+  }
 }
