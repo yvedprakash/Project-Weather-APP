@@ -1,10 +1,17 @@
 async function getWeather() {
-  const city = document.getElementById("city-input").value;
+  const city = document.getElementById("city-input").value.trim();
   const apiKey = "8b1880b708f34c02833144426251307";
-  const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+  const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}&aqi=yes`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    });
+
     if (!response.ok) throw new Error("City not found");
     const data = await response.json();
 
